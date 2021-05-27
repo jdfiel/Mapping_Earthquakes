@@ -4,7 +4,7 @@ console.log("working");
 // Create the map object with center at the San Francisco airport.
 let map = L.map('mapid').setView([37.5, -122.5], 10);
 
-// Add GeoJSON data.
+/// Add GeoJSON data.
 let sanFranAirport =
 {"type":"FeatureCollection","features":[{
     "type":"Feature",
@@ -25,7 +25,15 @@ let sanFranAirport =
 ]};
 
 // Grabbing our GeoJSON data.
-L.geoJSON(sanFranAirport).addTo(map);
+L.geoJson(sanFranAirport, {
+    // We turn each feature into a marker on the map.
+    onEachFeature: function(feature, layer) {
+      console.log(sanFranAirport);
+      console.log(layer);
+      layer.bindPopup("<h2>" + feature.properties.name + "</h2> <hr> <h3> " + feature.properties.faa + "</h3>");
+    }
+
+  }).addTo(map);
 
 // We create the tile layer that will be the background of our map.
 let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -36,4 +44,3 @@ let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/t
 
 // Then we add our 'graymap' tile layer to the map.
 streets.addTo(map);
-
